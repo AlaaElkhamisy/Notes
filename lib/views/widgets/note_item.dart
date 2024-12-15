@@ -5,6 +5,7 @@ import 'package:note_app/cubits/notes_cubit/notes_cubit.dart';
 import 'package:note_app/customs/custom_text_styles.dart';
 import 'package:note_app/models/note_model.dart';
 import 'package:note_app/views/edit_note_view.dart';
+import 'package:share_plus/share_plus.dart';
 
 class NoteItem extends StatelessWidget {
   const NoteItem({super.key, required this.note});
@@ -36,25 +37,42 @@ class NoteItem extends StatelessWidget {
                 style: CustomTextStyles.Title_Style,
               ),
               subtitle: Padding(
-                padding: const EdgeInsets.only(top: 16, bottom: 16),
+                padding: const EdgeInsets.only(top: 16, bottom: 6),
                 child: Text(
                   overflow: TextOverflow.ellipsis,
                   note.content,
                   style: CustomTextStyles.SubTitle_Style,
                 ),
               ),
-              trailing: IconButton(
-                  onPressed: () {
-                    note.delete();
-                    BlocProvider.of<NotesCubit>(context).fetchAllNotes();
-                  },
-                  icon: const Icon(
-                    FontAwesomeIcons.trash,
-                    color: Colors.black,
-                  )),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () {
+                        note.delete();
+                        BlocProvider.of<NotesCubit>(context).fetchAllNotes();
+                      },
+                      icon: const Icon(
+                        FontAwesomeIcons.trash,
+                        color: Colors.black,
+                      )),
+                  IconButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: () {
+                        Share.share("${note.title}\n\n${note.content}");
+                      },
+                      icon: const Icon(
+                        Icons.share,
+                        color: Colors.black,
+                      )),
+                ],
+              ),
             ),
             Padding(
-              padding: const EdgeInsets.only(right: 10),
+              padding: const EdgeInsets.only(
+                right: 10,
+              ),
               child: Text(
                 note.date,
                 style: CustomTextStyles.date_Style,
